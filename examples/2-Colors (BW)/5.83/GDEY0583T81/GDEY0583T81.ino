@@ -54,7 +54,7 @@ void loop() {
 
   #if 1 //Partial update demostration.
   //Partial update demo support displaying a clock at 5 locations with 00:00.  If you need to perform partial update more than 5 locations, please use the feature of using partial update at the full screen demo.
-  //After 5 partial updatees, implement a full screen update to clear the ghosting caused by partial updatees.
+  //After 5 partial updates, implement a full screen update to clear the ghosting caused by partial updates.
   //////////////////////Partial update time demo/////////////////////////////////////
       EPD_Init(); //Electronic paper initialization.  
       EPD_SetRAMValue_BaseMap(gImage_basemap); //Please do not delete the background color function, otherwise it will cause unstable display during partial update.
@@ -73,7 +73,7 @@ void loop() {
   #endif  
   
   #if 1    //Demo of using partial update to update the full screen, to enable this feature, please change 0 to 1.
-  //After 5 partial updatees, implement a full screen update to clear the ghosting caused by partial updatees.
+  //After 5 partial updates, implement a full screen update to clear the ghosting caused by partial updates.
   //////////////////////Partial update time demo/////////////////////////////////////
       EPD_Init(); //Full screen update initialization.
       EPD_WhiteScreen_White(); //Clear screen function.
@@ -129,16 +129,16 @@ void loop() {
 		
     /***********Letter demo***************************/
 		Paint_Clear(WHITE); //Clear canvas.
-    Paint_DrawString_EN(0, 0, "Good Display", &Font8, WHITE, BLACK);  //5*8.
-		Paint_DrawString_EN(0, 10, "Good Display", &Font12, WHITE, BLACK); //7*12.
-		Paint_DrawString_EN(0, 25, "Good Display", &Font16, WHITE, BLACK); //11*16.
-		Paint_DrawString_EN(0, 45, "Good Display", &Font20, WHITE, BLACK); //14*20.
-		Paint_DrawString_EN(0, 80, "Good Display", &Font24, WHITE, BLACK); //17*24.`
-    Paint_DrawNum(0, 120, 123456789, &Font8, WHITE, BLACK);  //5*8.
-		Paint_DrawNum(0, 130, 123456789, &Font12, WHITE, BLACK); //7*12.
-		Paint_DrawNum(0, 155, 123456789, &Font16, WHITE, BLACK); //11*16.
-		Paint_DrawNum(0, 175, 123456789, &Font20, WHITE, BLACK); //14*20.
-		Paint_DrawNum(0, 210, 123456789, &Font24, WHITE, BLACK); //17*24.
+    Paint_DrawString_EN(0, 0, "Good Display", &Font8, BLACK, WHITE);  //5*8.
+		Paint_DrawString_EN(0, 10, "Good Display", &Font12, BLACK, WHITE); //7*12.
+		Paint_DrawString_EN(0, 25, "Good Display", &Font16, BLACK, WHITE); //11*16.
+		Paint_DrawString_EN(0, 45, "Good Display", &Font20, BLACK, WHITE); //14*20.
+		Paint_DrawString_EN(0, 80, "Good Display", &Font24, BLACK, WHITE); //17*24.
+    Paint_DrawNum(0, 120, 123456789, &Font8, BLACK, WHITE);  //5*8.
+		Paint_DrawNum(0, 130, 123456789, &Font12, BLACK, WHITE); //7*12.
+		Paint_DrawNum(0, 155, 123456789, &Font16, BLACK, WHITE); //11*16.
+		Paint_DrawNum(0, 175, 123456789, &Font20, BLACK, WHITE); //14*20.
+		Paint_DrawNum(0, 210, 123456789, &Font24, BLACK, WHITE); //17*24.
     EPD_Init(); //Full screen update initialization.
     EPD_Display(ImageBW);//Display GUI image.
 		EPD_DeepSleep(); //EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!

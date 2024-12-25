@@ -35,8 +35,8 @@ void loop() {
 			EPD_WhiteScreen_ALL(gImage_BW1,gImage_RW1); //To Display one image using full screen update.
 			EPD_DeepSleep(); //Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
 			delay(3000); //Delay for 3s.	      
-		/************Fast update mode(16s)*******************/
-		#if 0	
+		/************Fast update mode*******************/
+		#if 1	
 			EPD_HW_Init_Fast(); //Fast update initialization.
 			EPD_WhiteScreen_ALL_Fast(gImage_BW1,gImage_RW1); //To display one image using fast update.
 			EPD_DeepSleep(); //Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
@@ -45,9 +45,8 @@ void loop() {
 		
 	#if 1 //Partial update demostration.
 	//Partial update demo support displaying a clock at 5 locations with 00:00.  If you need to perform partial update more than 5 locations, please use the feature of using partial update at the full screen demo.
-	//After 5 partial updatees, implement a full screen update to clear the ghosting caused by partial updatees.
+	//After 5 partial updatees, implement a full screen update to clear the ghosting caused by partial updates.
 	//////////////////////Partial update time demo/////////////////////////////////////	
-	//////////////////////Partial update time demo/////////////////////////////////////
 		  EPD_HW_Init(); //Electronic paper initialization.	
 			EPD_SetRAMValue_BaseMap(gImage_BWbasemap,gImage_RWbasemap); //Please do not delete the background color function, otherwise it will cause unstable display during partial update.																									
 			for(i=0;i<6;i++)
@@ -66,6 +65,7 @@ void loop() {
     Paint_NewImage(ImageBW, EPD_WIDTH, EPD_HEIGHT, 180, WHITE); //Set screen size and display orientation
     Paint_NewImage(ImageRW, EPD_WIDTH, EPD_HEIGHT, 180, WHITE); //Set screen size and display orientation
     /**************Drawing**********************/
+    //Black and white images/////////////////////////////
     Paint_SelectImage(ImageBW);//Set the virtual canvas data storage location
     Paint_Clear(WHITE);
 		//Point.   
@@ -73,44 +73,47 @@ void loop() {
     Paint_DrawPoint(10, 25, BLACK, DOT_PIXEL_2X2, DOT_STYLE_DFT); //point 2x2.
     Paint_DrawPoint(10, 40, BLACK, DOT_PIXEL_3X3, DOT_STYLE_DFT); //point 3x3.
     Paint_DrawPoint(10, 55, BLACK, DOT_PIXEL_4X4, DOT_STYLE_DFT); //point 4x4.
+    //Red and white images///////////////////////
     Paint_SelectImage(ImageRW);//Set the virtual canvas data storage location
     Paint_Clear(WHITE);
 		//Line.
-    Paint_DrawLine(20, 5, 50, 35, BLACK, LINE_STYLE_SOLID, DOT_PIXEL_1X1); //1x1line 1.
-    Paint_DrawLine(50, 5, 20, 35, BLACK, LINE_STYLE_SOLID, DOT_PIXEL_1X1); //1x1line 2.
+    Paint_DrawLine(20, 5, 50, 35, RED, LINE_STYLE_SOLID, DOT_PIXEL_1X1); //1x1line 1.
+    Paint_DrawLine(50, 5, 20, 35, RED, LINE_STYLE_SOLID, DOT_PIXEL_1X1); //1x1line 2.
 		//Rectangle.
-    Paint_DrawRectangle(20, 5, 50, 35, BLACK, DRAW_FILL_EMPTY, DOT_PIXEL_1X1); //Hollow rectangle 1.
-    Paint_DrawRectangle(70, 5, 100, 35, BLACK, DRAW_FILL_FULL, DOT_PIXEL_1X1); //Hollow rectangle 2.
+    Paint_DrawRectangle(20, 5, 50, 35, RED, DRAW_FILL_EMPTY, DOT_PIXEL_1X1); //Hollow rectangle 1.
+    Paint_DrawRectangle(70, 5, 100, 35, RED, DRAW_FILL_FULL, DOT_PIXEL_1X1); //Hollow rectangle 2.
     //Circle.
-		Paint_DrawCircle(30, 50, 10, BLACK, DRAW_FILL_EMPTY, DOT_PIXEL_1X1); //Hollow circle.
-    Paint_DrawCircle(80, 50, 10, BLACK, DRAW_FILL_FULL, DOT_PIXEL_1X1); //solid circle.
+		Paint_DrawCircle(30, 50, 10, RED, DRAW_FILL_EMPTY, DOT_PIXEL_1X1); //Hollow circle.
+    Paint_DrawCircle(80, 50, 10, RED, DRAW_FILL_FULL, DOT_PIXEL_1X1); //solid circle.
     EPD_HW_Init(); //EPD init GUI
     EPD_Display(ImageBW,ImageRW);//display image
     EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
-    delay(2000); //2s   
+    delay(3000); //3s   
     
     /***********String&Number***************************/ 
+    //Black and white images/////////////////////////////
     Paint_SelectImage(ImageBW);//Set the virtual canvas data storage location
     Paint_Clear(WHITE);
-    Paint_DrawString_EN(10, 0, "Good Display", &Font8, WHITE, BLACK);  //Font8
-    Paint_DrawString_EN(10, 10, "Good Display", &Font12, WHITE, BLACK); //Font12
-    Paint_DrawString_EN(10, 25, "Good Display", &Font16, WHITE, BLACK); //Font16
-    Paint_DrawString_EN(10, 45, "Good Display", &Font20, WHITE, BLACK); //Font20
+    Paint_DrawString_EN(10, 0, "Good Display", &Font8, BLACK, WHITE);  //Font8
+    Paint_DrawString_EN(10, 10, "Good Display", &Font12, BLACK, WHITE); //Font12
+    Paint_DrawString_EN(10, 25, "Good Display", &Font16, BLACK, WHITE); //Font16
+    Paint_DrawString_EN(10, 45, "Good Display", &Font20, BLACK, WHITE); //Font20
+    //Red and white images///////////////////////
     Paint_SelectImage(ImageRW);//Set the virtual canvas data storage location
     Paint_Clear(WHITE);
-    Paint_DrawNum(10, 80, 123456789, &Font8, WHITE, BLACK);  //Font8
-    Paint_DrawNum(10, 90, 123456789, &Font12, WHITE, BLACK); //Font12
-    Paint_DrawNum(10, 105, 123456789, &Font16, WHITE, BLACK); //Font16
+    Paint_DrawNum(10, 80, 123456789, &Font8, RED, WHITE);  //Font8
+    Paint_DrawNum(10, 90, 123456789, &Font12, RED, WHITE); //Font12
+    Paint_DrawNum(10, 105, 123456789, &Font16, RED, WHITE); //Font16
     EPD_HW_Init(); //EPD init GUI
     EPD_Display(ImageBW,ImageRW); //display image
     EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
-    delay(2000); //2s    
+    delay(3000); //3s   
 #endif 
     //Clear
     EPD_HW_Init(); //EPD init
     EPD_WhiteScreen_White();//EPD Clear
     EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
-    delay(2000); //2s  
+    delay(3000); //3s 
 
 
 

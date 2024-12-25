@@ -25,6 +25,7 @@ void setup() {
 5.Re-initialization is required for every full screen update.
 6.When porting the program, set the BUSY pin to input mode and other pins to output mode.
 */
+
 void loop() {
     unsigned char i;
  

@@ -85,16 +85,16 @@ void loop() {
     /***********String&Number***************************/ 
     Paint_SelectImage(ImageBW);//Set the virtual canvas data storage location
     Paint_Clear(WHITE);
-    Paint_DrawString_EN(0, 0, "Good Display", &Font8, WHITE, BLACK);  //Font8
-    Paint_DrawString_EN(0, 10, "Good Display", &Font12, WHITE, BLACK); //Font12
-    Paint_DrawString_EN(0, 25, "Good Display", &Font16, WHITE, BLACK); //Font16
-    Paint_DrawString_EN(0, 45, "Good Display", &Font20, WHITE, BLACK); //Font20
-    Paint_DrawString_EN(0, 70, "Good Display", &Font24, WHITE, BLACK); //Font24 
-    Paint_DrawNum(220, 200, 123456789, &Font8, WHITE, BLACK);  //Font8
-    Paint_DrawNum(220, 210, 123456789, &Font12, WHITE, BLACK); //Font12
-    Paint_DrawNum(220, 225, 123456789, &Font16, WHITE, BLACK); //Font16
-    Paint_DrawNum(220, 245, 123456789, &Font20, WHITE, BLACK); //Font20
-    Paint_DrawNum(220, 270, 123456789, &Font24, WHITE, BLACK); //Font24
+    Paint_DrawString_EN(0, 0, "Good Display", &Font8, BLACK, WHITE);  //Font8
+    Paint_DrawString_EN(0, 10, "Good Display", &Font12, BLACK, WHITE); //Font12
+    Paint_DrawString_EN(0, 25, "Good Display", &Font16, BLACK, WHITE); //Font16
+    Paint_DrawString_EN(0, 45, "Good Display", &Font20, BLACK, WHITE); //Font20
+    Paint_DrawString_EN(0, 70, "Good Display", &Font24, BLACK, WHITE); //Font24 
+    Paint_DrawNum(220, 200, 123456789, &Font8, BLACK, WHITE);  //Font8
+    Paint_DrawNum(220, 210, 123456789, &Font12, BLACK, WHITE); //Font12
+    Paint_DrawNum(220, 225, 123456789, &Font16, BLACK, WHITE); //Font16
+    Paint_DrawNum(220, 245, 123456789, &Font20, BLACK, WHITE); //Font20
+    Paint_DrawNum(220, 270, 123456789, &Font24, BLACK, WHITE); //Font24
     EPD_Init(); //Full screen update initialization.
     EPD_Display(ImageBW); //display image
     EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
