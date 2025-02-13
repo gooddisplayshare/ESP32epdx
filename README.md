@@ -1,5 +1,5 @@
 v1.0.7
-Add BT and WiFi control electronic paper display examples
+Add BT and WiFi control e-paper display examples
 增加BT和WiFi控制电子纸显示示例
 
 v1.0.6
