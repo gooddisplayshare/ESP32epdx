@@ -2,9 +2,18 @@
 //EPD
 #include"EPD.h"  //E-paper driver
 #include"IMAGE.h" //E-paper image data
-
+//BT
+#include "BluetoothSerial.h"
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+BluetoothSerial SerialBT; 
+char BT_RX_BUF[100]; //BT receive data
+char StringNum[100];// BT display  data
+unsigned int DataLength;// Data length
 
 unsigned char ImageBW[EPD_ARRAY];//Define canvas space  
+
 void setup() {
  /* ESP32-WROOM-32D (Using hardware SPI)
   BUSY——GPIO13  RES——GPIO12  DC——GPIO14  CS——GPIO27  SCK—GPIO18  SDIN—GPIO23  */
@@ -15,6 +24,10 @@ void setup() {
    //SPI
    SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0)); 
    SPI.begin ();  
+  //BT
+   Serial.begin(115200);
+   SerialBT.begin("ESP32test"); //Bluetooth device name
+   Serial.println("The device started, now you can pair it with bluetooth!");
 }
 
 //Tips//
@@ -28,8 +41,77 @@ void setup() {
 */
 void loop() {
     unsigned char i;
- 
- #if 1 //Full screen update, fast update, and partial update demostration.
+    int num;
+    EPD_HW_Init(); //Full screen update initialization.
+    EPD_WhiteScreen_White(); //Clear screen function.
+    EPD_DeepSleep(); //Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
+
+//Send the following test data in hexadecimal format using Bluetooth debugging assistant
+//AA 55 E1 00 08 40 41 42 43 44 45 46 47 04 FF 0D 0A    （40~47：@ABCDEFG   ascii） 
+/*AA 55: Data Header 
+  E1: Function Bit 
+  00: Reserved 
+  08: Data Length 
+  40-47: Data Bit
+  04: Verification 
+  FF 0D 0A: Data Tail 
+*/ 
+while(1)
+{   
+    if(SerialBT.available()) //Bluetooth data reception
+    {
+      
+      BT_RX_BUF[num++]=SerialBT.read(); 
+    }
+    if(BT_RX_BUF[16]==0x0A) //Determine the data tail
+      {
+        Serial.println("BT_RX_BUF[16]==0x0A");
+        //Get display data
+        for(i=0;i<BT_RX_BUF[4];i++)
+        {
+            StringNum[i]=BT_RX_BUF[i+5];  //Extract data: 5-12 data sections
+         }
+         //Confirm BT data
+        for(i=0;i<17;i++)
+        {
+          SerialBT.write(BT_RX_BUF[i]); 
+          Serial.write(BT_RX_BUF[i]);
+          BT_RX_BUF[i]=0;
+          }
+        if(i==17) 
+        {
+            i=0;
+            num=0;
+        }
+
+    //After receiving Bluetooth data, the electronic paper GUI displays the StrinNum, which is the real data sent by the phone:@ ABCDEFG
+    #if 1  //Bluetooth receives 8 bytes of data
+      //Data initialization settings
+      Paint_NewImage(ImageBW, EPD_WIDTH, EPD_HEIGHT, 270, WHITE); // Set screen size and display orientation
+      Paint_SelectImage(ImageBW);// Set the virtual canvas data storage location
+      /***********String***************************/ 
+      Paint_Clear(WHITE);
+      Paint_DrawString_EN(0, 0, "Good Display", &Font12, WHITE, BLACK);  // Display Good Display
+      Paint_DrawString_EN(0, 50,  StringNum, &Font20, BLACK, WHITE);  // Display Bluetooth data sent by mobile phone，@ABCDEFG
+      Paint_DrawString_EN(0, 70,  StringNum, &Font24, BLACK, WHITE);  // Display Bluetooth data sent by mobile phone，@ABCDEFG
+      EPD_HW_Init_GUI(); //EPD init GUI
+      EPD_Display(ImageBW);//Display image 
+      EPD_DeepSleep();// EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!        
+    #endif
+
+    #if 0 //StringNum is image data, use this function.
+      EPD_HW_Init(); //Full screen update initialization.
+      EPD_WhiteScreen_ALL(StringNum); // To Display one image using full screen refresh.
+      EPD_DeepSleep(); // Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
+    #endif
+  }
+}
+
+
+
+
+
+ #if 0 //Full screen update, fast update, and partial update demostration.
       EPD_HW_Init(); //Full screen update initialization.
       EPD_WhiteScreen_White(); //Clear screen function.
       EPD_DeepSleep(); //Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
@@ -44,14 +126,16 @@ void loop() {
 			EPD_WhiteScreen_ALL_Fast(gImage_2); //To display the second image using fast update.
 			EPD_DeepSleep(); //Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
 			delay(2000); //Delay for 2s. 
-     /************4 Gray update mode(2s)*******************/
+
+     /************4 Gray update mode*******************/
 	#if 1		//To enable this feature, please change 0 to 1
-			/************Onder versions do not support this feature*******************/
-			EPD_HW_Init_4G(); //Fast update initialization.
+			EPD_HW_Init_4G(); //4 Gray update initialization.
 			EPD_WhiteScreen_ALL_4G(gImage_4G1); //To display one image using fast update.
 			EPD_DeepSleep(); //Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
-				delay(2000); //Delay for 2s. 
-	#endif
+			delay(2000); //Delay for 2s. 
+
+	 #endif 
+  
   #if 1 //Partial update demostration.
   //Partial update demo support displaying a clock at 5 locations with 00:00.  If you need to perform partial update more than 5 locations, please use the feature of using partial update at the full screen demo.
   //After 5 partial updates, implement a full screen update to clear the ghosting caused by partial updates.
@@ -77,6 +161,8 @@ void loop() {
       EPD_Dis_PartAll(gImage_p1); //Image 1
       EPD_Dis_PartAll(gImage_p2); //Image 2
       EPD_Dis_PartAll(gImage_p3); //Image 3
+      EPD_Dis_PartAll(gImage_p4); //Image 4
+      EPD_Dis_PartAll(gImage_p5); //Image 5
       EPD_DeepSleep();//Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
       delay(2000); //Delay for 2s. 
 
@@ -91,7 +177,7 @@ void loop() {
 #endif   
 
 
- #if 1 //GUI demostration.
+ #if 0 //GUI demostration.
 ///////////////////////////GUI///////////////////////////////////////////////////////////////////////////////////
    //Data initialization settings
     Paint_NewImage(ImageBW, EPD_WIDTH, EPD_HEIGHT, 270, WHITE); //Set screen size and display orientation

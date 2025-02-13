@@ -1,8 +1,8 @@
 #ifndef _EPD_H_
 #define _EPD_H_
 
-#define EPD_WIDTH   168 
-#define EPD_HEIGHT  384
+#define EPD_WIDTH   128 
+#define EPD_HEIGHT  296
 #define EPD_ARRAY  EPD_WIDTH*EPD_HEIGHT/8  
 
 //Full screen update display
@@ -28,10 +28,9 @@ void EPD_HW_Init_Fast(void);
 void EPD_WhiteScreen_ALL_Fast(const unsigned char *datas);   
 void EPD_HW_Init_Fast2(void);
 void EPD_WhiteScreen_ALL_Fast2(const unsigned char *datas);
-//4 Gray														 										 
+//4 Gray														 
 void EPD_HW_Init_4G(void);
 void EPD_WhiteScreen_ALL_4G(const unsigned char *datas);
-void EPD_Update_4G(void);		
 							//GUI
 void EPD_HW_Init_GUI(void);				 
 void EPD_Display(unsigned char *Image);

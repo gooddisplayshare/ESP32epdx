@@ -38,7 +38,13 @@ void loop() {
 		PIC_display(gImage_1);//To Display one image using full screen update.
 		EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
 		delay(3000); //Delay for 3s.
-
+	/************Fast update mode(12s)*******************/
+	#if 1 //Fast update demostration.	
+		EPD_init_Fast(); //Fast screen update initialization.
+		PIC_display(gImage_1);//To Display one image using full screen update.
+		EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
+		delay(3000); //Delay for 3s.	
+	#endif	
 	/************Full display 180*******************/
   #if 0//Full screen update initialization.
     EPD_init_180(); //Fast screen update initialization.

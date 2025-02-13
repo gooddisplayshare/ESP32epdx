@@ -31,8 +31,8 @@ void Display_All_Yellow(void);
 void Display_All_Red(void);
 
 void Acep_color(unsigned char color);
-void EPD_init_Fast(void);
-							 
+//Fast
+void EPD_init_Fast(void);							 
 
 //GUI display					 
 void EPD_HW_Init_GUI(void); 

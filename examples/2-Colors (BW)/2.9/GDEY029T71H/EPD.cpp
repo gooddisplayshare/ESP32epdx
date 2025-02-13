@@ -28,9 +28,6 @@ void EPD_HW_Init(void)
 	EPD_W21_WriteCMD(0x12);  //SWRESET
 	Epaper_READBUSY();   
 	
-	EPD_W21_WriteCMD(0x3C); //BorderWavefrom
-	EPD_W21_WriteDATA(0x01);	
-	
 	EPD_W21_WriteCMD(0x01); //Driver output control      
 	EPD_W21_WriteDATA((EPD_HEIGHT-1)%256);   
 	EPD_W21_WriteDATA((EPD_HEIGHT-1)/256);
@@ -112,11 +109,23 @@ void EPD_Update_Fast(void)
   Epaper_READBUSY();   
 
 }
+//4 Gray update function
+void EPD_Update_4G(void)
+{   
+  EPD_W21_WriteCMD(0x22); //Display Update Control
+  EPD_W21_WriteDATA(0xCF);   
+  EPD_W21_WriteCMD(0x20); //Activate Display Update Sequence
+  Epaper_READBUSY();   
+
+}
 //Partial refresh update function
 void EPD_Part_Update(void)
 {
+	EPD_W21_WriteCMD(0x3C); //BorderWavefrom
+	EPD_W21_WriteDATA(0xC0);	
+	
 	EPD_W21_WriteCMD(0x22); //Display Update Control
-	EPD_W21_WriteDATA(0x1C);  //1C 
+	EPD_W21_WriteDATA(0xDF);  
 	EPD_W21_WriteCMD(0x20); //Activate Display Update Sequence
 	Epaper_READBUSY(); 			
 }
@@ -431,8 +440,8 @@ void EPD_Display(unsigned char *Image)
 	}
 	EPD_Update();		 
 }
-//Fast refresh 2 initialization
-void EPD_HW_Init_Fast2(void)
+//4 Gray update initialization
+void EPD_HW_Init_4G(void)
 {
 	EPD_W21_RST_0;  // Module reset   
 	delay_xms(10);//At least 10ms delay 
@@ -459,22 +468,90 @@ void EPD_HW_Init_Fast2(void)
   EPD_W21_WriteCMD(0x20);	
 	Epaper_READBUSY();   
 }
-//Fast 2 display
-void EPD_WhiteScreen_ALL_Fast2(const unsigned char *datas)
+//4 Gray display
+unsigned char In2bytes_Out1byte_RAM1(unsigned char data1,unsigned char data2)
 {
-  unsigned int i;	
-  EPD_W21_WriteCMD(0x24);   //write RAM for black(0)/white (1)
-  for(i=0;i<EPD_ARRAY;i++)
-   {               
-     EPD_W21_WriteDATA(*datas);
-			datas++;
-   } 	
-  EPD_W21_WriteCMD(0x26);   //write RAM for black(0)/white (1)
-  for(i=0;i<EPD_ARRAY;i++)
-   {               
-     EPD_W21_WriteDATA(0x00);
-   } 	 
-   EPD_Update_Fast();	 
+  unsigned int i; 
+	unsigned char TempData1,TempData2;
+	unsigned char outdata=0x00;
+	TempData1=data1;
+	TempData2=data2;
+	
+    for(i=0;i<4;i++)
+     { 
+        outdata=outdata<<1;
+        if( ((TempData1&0xC0)==0xC0) || ((TempData1&0xC0)==0x40))
+           outdata=outdata|0x01;
+        else 
+          outdata=outdata|0x00;
+
+        TempData1=TempData1<<2;
+     }
+
+    for(i=0;i<4;i++)
+     { 
+        outdata=outdata<<1;
+         if((TempData2&0xC0)==0xC0||(TempData2&0xC0)==0x40)
+           outdata=outdata|0x01;
+        else 
+          outdata=outdata|0x00;
+
+        TempData2=TempData2<<2;
+
+       // delay_us(5) ; 
+     }
+		 return outdata;
+}
+unsigned char In2bytes_Out1byte_RAM2(unsigned char data1,unsigned char data2)
+{
+  unsigned int i; 
+  unsigned char TempData1,TempData2;
+	unsigned char outdata=0x00;
+	TempData1=data1;
+	TempData2=data2;
+
+	for(i=0;i<4;i++)
+	{ 
+		outdata=outdata<<1;
+		if( ((TempData1&0xC0)==0xC0) || ((TempData1&0xC0)==0x80))
+			 outdata=outdata|0x01;
+		else 
+			outdata=outdata|0x00;
+
+		TempData1=TempData1<<2;
+	}
+
+	for(i=0;i<4;i++)
+	{ 
+		outdata=outdata<<1;
+		 if((TempData2&0xC0)==0xC0||(TempData2&0xC0)==0x80)
+			 outdata=outdata|0x01;
+		else 
+			outdata=outdata|0x00;
+
+		TempData2=TempData2<<2;
+	}
+	return outdata;
+}
+void EPD_WhiteScreen_ALL_4G(const unsigned char *datas)
+{
+	unsigned int i;
+	unsigned char tempOriginal;   
+
+	EPD_W21_WriteCMD(0x24);   //write RAM for black(0)/white (1)
+	for(i=0;i<EPD_ARRAY*2;i+=2)
+	{               
+		tempOriginal= In2bytes_Out1byte_RAM1( *(datas+i),*(datas+i+1));
+		EPD_W21_WriteDATA(tempOriginal); 
+	}
+
+	EPD_W21_WriteCMD(0x26);   //write RAM for black(0)/white (1)
+	for(i=0;i<EPD_ARRAY*2;i+=2)
+	{               
+		tempOriginal= In2bytes_Out1byte_RAM2( *(datas+i),*(datas+i+1));
+		EPD_W21_WriteDATA(tempOriginal); 
+	}
+	EPD_Update_4G();	 
 }
 /***********************************************************
             end file

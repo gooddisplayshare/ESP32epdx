@@ -11,7 +11,8 @@ void delay_xms(unsigned int xms)
 void lcd_chkstatus(void)
 {
   while(isEPD_W21_BUSY==0);
-                   
+  delay_xms(100);//At least 100ms delay 	
+                
 }
 
 void EPD_init(void)
@@ -80,6 +81,79 @@ void EPD_init(void)
 	
 }
 	
+void EPD_init_Fast(void)
+{
+	delay_xms(100);//At least 100ms delay 	
+	EPD_W21_RST_0;		// Module reset
+	delay_xms(50);//At least 50ms delay 
+	EPD_W21_RST_1;
+	delay_xms(50);//At least 50ms delay 
+	lcd_chkstatus();          //waiting for the electronic paper IC to release the idle signal
+		
+	EPD_W21_WriteCMD(0x4D);
+  EPD_W21_WriteDATA(0x78);	
+	
+	EPD_W21_WriteCMD(0x00);	//0x00
+	EPD_W21_WriteDATA(0x2F);	
+	EPD_W21_WriteDATA(0x29);	
+
+	EPD_W21_WriteCMD(0x06);//47uH
+  EPD_W21_WriteDATA(0x0d);
+  EPD_W21_WriteDATA(0x12);
+  EPD_W21_WriteDATA(0x30);
+	EPD_W21_WriteDATA(0x20);
+  EPD_W21_WriteDATA(0x19);
+  EPD_W21_WriteDATA(0x3D);
+	EPD_W21_WriteDATA(0x0C);
+	
+	EPD_W21_WriteCMD(0x06);	//0x06
+  EPD_W21_WriteDATA(0x0d);
+  EPD_W21_WriteDATA(0x12);
+  EPD_W21_WriteDATA(0x30);
+	EPD_W21_WriteDATA(0x20);
+  EPD_W21_WriteDATA(0x19);
+  EPD_W21_WriteDATA(0x3D);
+	EPD_W21_WriteDATA(0x0C);
+	
+	EPD_W21_WriteCMD(0x50);	//0x50
+	EPD_W21_WriteDATA(0x37);	
+
+	EPD_W21_WriteCMD(0x61);//0x61	
+	EPD_W21_WriteDATA(Source_BITS/256);	
+	EPD_W21_WriteDATA(Source_BITS%256);	
+	EPD_W21_WriteDATA(Gate_BITS/256);	
+	EPD_W21_WriteDATA(Gate_BITS%256);	
+
+	EPD_W21_WriteCMD(0x65);	//0x65
+	EPD_W21_WriteDATA(0x00);	
+	EPD_W21_WriteDATA(0x00);	
+	EPD_W21_WriteDATA(0x00);	
+	EPD_W21_WriteDATA(0x00);	
+
+	EPD_W21_WriteCMD(0xE0);
+	EPD_W21_WriteDATA(0x01); 
+
+  EPD_W21_WriteCMD(0xE3);
+  EPD_W21_WriteDATA(0x08);  
+	
+  EPD_W21_WriteCMD(0xE5);
+  EPD_W21_WriteDATA(0x08); 
+	
+  EPD_W21_WriteCMD(0xE9);
+  EPD_W21_WriteDATA(0x01);   
+	
+  EPD_W21_WriteCMD(0x04); //Power on
+	lcd_chkstatus();          //waiting for the electronic paper IC to release the idle signal	
+	//Fast
+	EPD_W21_WriteCMD(0xE0);
+	EPD_W21_WriteDATA(0x03);    			
+	EPD_W21_WriteCMD(0xE6);
+	EPD_W21_WriteDATA(92);
+	EPD_W21_WriteCMD(0xA5);		
+	EPD_W21_WriteDATA(0x00);
+	lcd_chkstatus();          //waiting for the electronic paper IC to release the idle signal
+
+}		  
 void EPD_sleep(void)
 {  	
 	EPD_W21_WriteCMD(0X02);  	//power off

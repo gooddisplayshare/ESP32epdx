@@ -59,7 +59,62 @@ void EPD_init(void)
   EPD_W21_WriteCMD(0x04);
   lcd_chkstatus();  
 }
+//Fast full screen update initialization
+void EPD_init_Fast(void)	
+{
+  delay(20);//At least 20ms delay 	
+	EPD_W21_RST_0;		// Module reset
+	delay(50);//At least 50ms delay 
+	EPD_W21_RST_1;
+	delay(50);//At least 50ms delay 
+	
+	lcd_chkstatus();
+  EPD_W21_WriteCMD(0x4D);
+  EPD_W21_WriteDATA(0x78);
 
+  EPD_W21_WriteCMD(0x00);	//PSR
+  EPD_W21_WriteDATA(0x0F);
+  EPD_W21_WriteDATA(0x29);
+
+  EPD_W21_WriteCMD(0X06); //BTST_P
+  EPD_W21_WriteDATA(0x0D);  //47uH
+  EPD_W21_WriteDATA(0x12);
+  EPD_W21_WriteDATA(0x30);
+  EPD_W21_WriteDATA(0x20);
+  EPD_W21_WriteDATA(0x19);
+  EPD_W21_WriteDATA(0x2A);
+  EPD_W21_WriteDATA(0x22);
+
+  EPD_W21_WriteCMD(0x50);	//CDI
+  EPD_W21_WriteDATA(0x37);
+
+  EPD_W21_WriteCMD(0x61); //TRES
+  EPD_W21_WriteDATA(Source_BITS/256);		// Source_BITS_H
+  EPD_W21_WriteDATA(Source_BITS%256);		// Source_BITS_L
+  EPD_W21_WriteDATA(Gate_BITS/256);			// Gate_BITS_H
+  EPD_W21_WriteDATA(Gate_BITS%256); 		// Gate_BITS_L	
+
+  EPD_W21_WriteCMD(0xE9);
+  EPD_W21_WriteDATA(0x01); 
+
+  EPD_W21_WriteCMD(0x30);
+  EPD_W21_WriteDATA(0x08);  
+	
+  EPD_W21_WriteCMD(0x04);
+  lcd_chkstatus(); 
+	
+	EPD_W21_WriteCMD(0xE0);
+	EPD_W21_WriteDATA(0x02);
+		
+	EPD_W21_WriteCMD(0xE6);
+	EPD_W21_WriteDATA(0x5D);
+	 
+	EPD_W21_WriteCMD(0xA5);
+	EPD_W21_WriteDATA(0x00);
+	lcd_chkstatus(); 
+
+	
+}	
 
 void EPD_DeepSleep(void)
 {   

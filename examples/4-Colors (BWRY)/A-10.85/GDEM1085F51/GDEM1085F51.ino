@@ -35,7 +35,11 @@ void loop() {
 		PIC_display(gImage_4G1);//To Display one image using full screen update.
 		EPD_sleep();//Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
 		delay(3000); //Delay for 3s.
-		
+		/************Fast display*******************/
+		EPD_init_Fast(); //Fast screen update initialization.
+		PIC_display(gImage_4G1);//To Display one image using full screen update.
+		EPD_sleep();//Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
+		delay(3000); //Delay for 3s.
 	#if 0//Demonstration of Display 4 c  0*olors, to enable this feature, please change 0 to 1.
 	 /************Full display*******************/
 		EPD_init(); //Full screen update initialization.
