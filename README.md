@@ -1,3 +1,7 @@
+v1.0.7
+Add BT and WiFi control e-paper display examples
+增加BT和WiFi控制电子纸显示示例
+
 v1.0.6
 Add a 4-color e-paper driver for sizes and improve GUI functionality
 增加4色电子纸驱动程序，完善GUI功能
