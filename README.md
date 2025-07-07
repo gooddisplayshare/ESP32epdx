@@ -1,3 +1,6 @@
+v1.0.8
+Added 3.97-inch monochrome and 4-color options, updated 2.9/5.79/7.5/11.6-inch 4-color options, and added fast refresh function.
+增加3.97寸单色、四色，更新2.9/5.79/7.5/11.6寸四色，增加快刷功能。
 v1.0.7
 Add BT and WiFi control e-paper display examples
 增加BT和WiFi控制电子纸显示示例

@@ -820,6 +820,7 @@ void Paint_DrawBitMap_Paste(const unsigned char* image_buffer, UWORD xStart, UWO
     }
 }
 
+
 ///******************************************************************************
 //function:	SDisplay half of monochrome bitmap
 //parameter:

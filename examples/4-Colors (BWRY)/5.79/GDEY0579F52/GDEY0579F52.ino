@@ -38,27 +38,16 @@ void loop() {
 		PIC_display(gImage_1);//To Display one image using full screen update.
 		EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
 		delay(3000); //Delay for 3s.
-  /************Fast update mode(12s)*******************/
-	#if 1 //Fast update demostration.	
+
+	 /************Fast display*******************/
 		EPD_init_Fast(); //Fast screen update initialization.
 		PIC_display(gImage_1);//To Display one image using full screen update.
 		EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
-		delay(3000); //Delay for 3s.
-  #endif		  	
-	/************Full display 180*******************/
-  #if 0//Full screen update initialization.
-    EPD_init_180(); //Fast screen update initialization.
-    PIC_display(gImage_1);//To Display one image using full screen update.
-    EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
-    delay(3000); //Delay for 3s.	
-  #endif		
-
+		delay(5000); //Delay for 5s.
 #endif				
-
-
 #if 1//GUI Demo(GUI examples can display points, lines, rectangles, circles, letters, numbers, etc).
    //Data initialization settings.
-    Paint_NewImage(BlackImage, EPD_WIDTH, EPD_HEIGHT, 0, WHITE0); //Set canvas parameters, GUI image rotation, please change 270 to 0/90/180/270.
+    Paint_NewImage(BlackImage, EPD_WIDTH, EPD_HEIGHT, 180, WHITE0); //Set canvas parameters, GUI image rotation, please change 270 to 0/90/180/270.
     Paint_SetScale(4);
 		Paint_SelectImage(BlackImage); //Select current settings.
 

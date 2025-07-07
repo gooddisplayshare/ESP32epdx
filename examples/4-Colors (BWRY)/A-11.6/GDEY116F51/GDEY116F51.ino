@@ -4,7 +4,7 @@
 #include"IMAGE.h" //E-paper image data
 
 
-unsigned char BlackImage[EPD_ARRAY];//Define canvas space 
+unsigned char BlackImage[EPD_ARRAY/2];//Define canvas space 
  
 void setup() {
  /* ESP32-WROOM-32D (Using hardware SPI)
@@ -37,14 +37,12 @@ void loop() {
 		EPD_init(); //Full screen update initialization.
 		PIC_display(gImage_1);//To Display one image using full screen update.
 		EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
-		delay(3000); //Delay for 3s.
-  /************Fast update mode(12s)*******************/
-	#if 1 //Fast update demostration.	
-		EPD_init_Fast(); //Fast screen update initialization.
+		delay(5000); //Delay for 5s.
+  		/************Fast display(16s)*******************/
+		EPD_init_Fast(); //Full screen update initialization.
 		PIC_display(gImage_1);//To Display one image using full screen update.
 		EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
-		delay(3000); //Delay for 3s.
-  #endif		  	
+    delay(5000); //Delay for 5s.
 	/************Full display 180*******************/
   #if 0//Full screen update initialization.
     EPD_init_180(); //Fast screen update initialization.
@@ -58,8 +56,8 @@ void loop() {
 
 #if 1//GUI Demo(GUI examples can display points, lines, rectangles, circles, letters, numbers, etc).
    //Data initialization settings.
-    Paint_NewImage(BlackImage, EPD_WIDTH, EPD_HEIGHT, 0, WHITE0); //Set canvas parameters, GUI image rotation, please change 270 to 0/90/180/270.
-    Paint_SetScale(4);
+    Paint_NewImage(BlackImage, EPD_WIDTH, EPD_HEIGHT/2, 0, WHITE0); //Set canvas parameters, GUI image rotation, please change 270 to 0/90/180/270.
+    Paint_SetScale(4); 
 		Paint_SelectImage(BlackImage); //Select current settings.
 
 		/**************Drawing******************************/	
@@ -80,17 +78,14 @@ void loop() {
 		Paint_DrawCircle(30, 50, 10, RED0, DRAW_FILL_EMPTY, DOT_PIXEL_1X1); //Hollow circle.
     Paint_DrawCircle(80, 50, 10, YELLOW0, DRAW_FILL_FULL, DOT_PIXEL_1X1); //solid circle.
     EPD_init(); //Full screen update initialization.
-    PIC_display(BlackImage);//display image
-		EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
-		delay(3000); //Delay for 3s.	
+    PIC_display_Half1(BlackImage);//display image.	
     /***********String&Number***************************/ 
     Paint_Clear(WHITE0);
     Paint_DrawString_EN(5, 10, "Good Display", &Font8, RED0, WHITE0);  //Font8
     Paint_DrawString_EN(5, 25, "Good Display", &Font12, YELLOW0, WHITE0); //Font12
 		Paint_DrawNum(5, 45, 123456789, &Font16, BLACK0, WHITE0); //Font16
     Paint_DrawNum(5, 70, 123456789, &Font20, BLACK0, WHITE0); //Font20
-    EPD_init(); //Full screen update initialization.
-    PIC_display(BlackImage);//display image
+    PIC_display_Half2(BlackImage);//display image.	
 		EPD_DeepSleep();//EPD_DeepSleep,Sleep instruction is necessary, please do not delete!!!
 		delay(3000); //Delay for 3s.	
 
