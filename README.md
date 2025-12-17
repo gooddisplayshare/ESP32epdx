@@ -1,3 +1,9 @@
+
+v1.0.9
+Added 2.13-inch high-resolution four-color display, updated 10.85-inch four-color display, 
+and added full category e-paper WiFi driver display function (ESP32-L driver board).
+增加2.13寸高分四色，更新10.85寸四色，增加全品类电子纸WiFi驱动显示功能（ESP32-L驱动板）。
+
 v1.0.8
 Added 3.97-inch monochrome and 4-color options, updated 2.9/5.79/7.5/11.6-inch 4-color options, and added fast refresh function.
 增加3.97寸单色、四色，更新2.9/5.79/7.5/11.6寸四色，增加快刷功能。
@@ -21,6 +27,4 @@ Add a 2-color e-paper driver for sizes under 7.5 inches and improve GUI function
 v1.0.1
 Add a 2-color e-paper driver for sizes under 7.5 inches and improve GUI functionality
 增加2色电子纸驱动程序，7.5寸以下，完善GUI功能
-
-
 
