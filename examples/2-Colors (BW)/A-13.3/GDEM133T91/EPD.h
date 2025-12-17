@@ -15,7 +15,7 @@ void EPD_DeepSleep(void);
 //Partial update display 
 void EPD_SetRAMValue_BaseMap(const unsigned char * datas);
 void EPD_Dis_PartAll(const unsigned char * datas);
-void EPD_Dis_Part(unsigned int x_start,unsigned int y_start,const unsigned char * datas,unsigned int PART_COLUMN,unsigned int PART_LINE);
+void EPD_Dis_Part(unsigned int x_start,unsigned int y_start,const unsigned char * datas,unsigned int PART_LINE,unsigned int PART_COLUMN);
 void EPD_Dis_Part_Time(unsigned int x_startA,unsigned int y_startA,const unsigned char * datasA,
 	                       unsigned int x_startB,unsigned int y_startB,const unsigned char * datasB,
 												 unsigned int x_startC,unsigned int y_startC,const unsigned char * datasC,

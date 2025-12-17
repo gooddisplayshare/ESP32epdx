@@ -321,6 +321,11 @@ Set_ramSA();
 	}	
 	EPD_Update();
 	
+		//add
+	EPD_W21_RST_0;  // Module reset   
+	delay_xms(10);//At least 10ms delay 
+	EPD_W21_RST_1;
+	delay_xms(10); //At least 10ms delay 
 	
 	
 	 //basemap  
@@ -466,6 +471,7 @@ void EPD_WhiteScreen_ALL(const unsigned char *datas)
 }
 void EPD_HW_Init_Part(void)
 {
+  /* Delete
 	EPD_W21_RST_0;  // Module reset   
 	delay_xms(10);//At least 10ms delay 
 	EPD_W21_RST_1;
@@ -474,6 +480,7 @@ void EPD_HW_Init_Part(void)
 	Epaper_READBUSY();   
 	EPD_W21_WriteCMD(0x12);  //SWRESET
 	Epaper_READBUSY();   
+  */ 
 
 	EPD_W21_WriteCMD(0x11);	 // Data Entry mode setting
 	EPD_W21_WriteDATA(0x03);     // 1 ¨CY decrement, X increment

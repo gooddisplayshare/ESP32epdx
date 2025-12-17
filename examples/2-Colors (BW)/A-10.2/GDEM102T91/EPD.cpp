@@ -141,44 +141,76 @@ void EPD_SetRAMValue_BaseMap( const unsigned char * datas)
    
 }
 //Partial update display
-void EPD_Dis_Part(unsigned int x_start,unsigned int y_start,const unsigned char * datas,unsigned int PART_COLUMN,unsigned int PART_LINE)
+void EPD_Dis_Part(unsigned int x_start,unsigned int y_start,const unsigned char * datas,unsigned int PART_LINE,unsigned int PART_COLUMN)
 {
-  unsigned int i;  
-  unsigned int x_end,y_end;
-  
-  x_start=x_start/8; //x address start
-  x_end=x_start+PART_LINE/8-1; //x address end
-  y_start=y_start; //Y address start
-  y_end=y_start+PART_COLUMN-1; //Y address end
-  
-  EPD_W21_RST_0;  // Module reset   
-  delay(10);//At least 10ms delay 
-  EPD_W21_RST_1;
-  delay(10); //At least 10ms delay  
-  EPD_W21_WriteCMD(0x3C); //BorderWavefrom,
-  EPD_W21_WriteDATA(0x80);  
-  
-  EPD_W21_WriteCMD(0x44);       // set RAM x address start/end
-  EPD_W21_WriteDATA(x_start);  //x address start
-  EPD_W21_WriteDATA(x_end);   //y address end   
-  EPD_W21_WriteCMD(0x45);    // set RAM y address start/end
-  EPD_W21_WriteDATA(y_start%256);  //y address start2 
-  EPD_W21_WriteDATA(y_start/256); //y address start1 
-  EPD_W21_WriteDATA(y_end%256);  //y address end2 
-  EPD_W21_WriteDATA(y_end/256); //y address end1   
+	unsigned int i;  
+	unsigned int x_end,x_start1,x_start2,x_end1,x_end2;
+	unsigned int y_start1,y_start2,y_end1,y_end2;
+	x_start=x_start;
+	x_end=x_start+PART_LINE-1; 
+	
+	x_start1=0;
+	x_start2=x_start;
+	if(x_start>=256)
+	{
+		x_start1=x_start2/256;
+		x_start2=x_start2%256;
+	}	
+	x_end1=0;
+	x_end2=x_end;
+	if(x_end2>=256)
+	{
+		x_end1=x_end2/256;
+		x_end2=x_end2%256;		
+	}		
 
-  EPD_W21_WriteCMD(0x4E);        // set RAM x address count to 0;
-  EPD_W21_WriteDATA(x_start);   //x start address
-  EPD_W21_WriteCMD(0x4F);      // set RAM y address count to 0X127;    
-  EPD_W21_WriteDATA(y_start%256);//y address start2
-  EPD_W21_WriteDATA(y_start/256);//y address start1
-  
-  
-   EPD_W21_WriteCMD(0x24);   //Write Black and White image to RAM
-   for(i=0;i<PART_COLUMN*PART_LINE/8;i++)
-   {                         
-     EPD_W21_WriteDATA(datas[i]);
-   } 
+	y_start1=0;
+	y_start2=y_start;
+	if(y_start>=256)
+	{
+		y_start1=y_start2/256;
+		y_start2=y_start2%256;
+	}
+	y_end1=0;
+	y_end2=y_start+PART_COLUMN-1;
+	if(y_end2>=256)
+	{
+		y_end1=y_end2/256;
+		y_end2=y_end2%256;		
+	}		
+//Reset
+	EPD_W21_RST_0;  // Module reset   
+	delay_xms(10);//At least 10ms delay 
+	EPD_W21_RST_1;
+	delay_xms(10); //At least 10ms delay 
+	
+	EPD_W21_WriteCMD(0x3C); //BorderWavefrom  
+	EPD_W21_WriteDATA(0x80);	
+//	
+	EPD_W21_WriteCMD(0x44);       // set RAM x address start/end, in page 35
+	EPD_W21_WriteDATA(x_start2);    // RAM y address start at 0127h;
+	EPD_W21_WriteDATA(x_start1);    // RAM y address start at 0127h;
+	EPD_W21_WriteDATA(x_end2);    // RAM y address end at 00h;
+	EPD_W21_WriteDATA(x_end1);    // ????=0	
+	EPD_W21_WriteCMD(0x45);       // set RAM y address start/end, in page 35
+	EPD_W21_WriteDATA(y_start2);    // RAM y address start at 0127h;
+	EPD_W21_WriteDATA(y_start1);    // RAM y address start at 0127h;
+	EPD_W21_WriteDATA(y_end2);    // RAM y address end at 00h;
+	EPD_W21_WriteDATA(y_end1);    // ????=0	
+
+
+	EPD_W21_WriteCMD(0x4E);   // set RAM x address count to 0;
+	EPD_W21_WriteDATA(x_start2);
+	EPD_W21_WriteDATA(x_start1);
+	EPD_W21_WriteCMD(0x4F);   // set RAM y address count to 0X127;    
+	EPD_W21_WriteDATA(y_start2);
+	EPD_W21_WriteDATA(y_start1);
+	
+	EPD_W21_WriteCMD(0x24);   //Write Black and White image to RAM
+	 for(i=0;i<PART_COLUMN*PART_LINE/8;i++)
+	 {                         
+		 EPD_W21_WriteDATA(datas[i]);
+	 }  
    EPD_Part_Update();
 
 }
@@ -214,44 +246,76 @@ void EPD_DeepSleep(void)
 }
 
 //Partial update write address and data
-void EPD_Dis_Part_RAM(unsigned int x_start,unsigned int y_start,const unsigned char * datas,unsigned int PART_COLUMN,unsigned int PART_LINE)
+void EPD_Dis_Part_RAM(unsigned int x_start,unsigned int y_start,const unsigned char * datas,unsigned int PART_LINE,unsigned int PART_COLUMN)
 {
-  unsigned int i;  
-  unsigned int x_end,y_end;
-  
-  x_start=x_start/8; //x address start
-  x_end=x_start+PART_LINE/8-1; //x address end
-  
-  y_start=y_start-1; //Y address start
-  y_end=y_start+PART_COLUMN-1; //Y address end
-  
-  EPD_W21_RST_0;  // Module reset   
-  delay(10);//At least 10ms delay 
-  EPD_W21_RST_1;
-  delay(10); //At least 10ms delay  
-  EPD_W21_WriteCMD(0x3C); //BorderWavefrom,
-  EPD_W21_WriteDATA(0x80);  
-  
-  EPD_W21_WriteCMD(0x44);       // set RAM x address start/end
-  EPD_W21_WriteDATA(x_start);  //x address start
-  EPD_W21_WriteDATA(x_end);   //y address end   
-  EPD_W21_WriteCMD(0x45);     // set RAM y address start/end
-  EPD_W21_WriteDATA(y_start%256);  //y address start2 
-  EPD_W21_WriteDATA(y_start/256); //y address start1 
-  EPD_W21_WriteDATA(y_end%256);  //y address end2 
-  EPD_W21_WriteDATA(y_end/256); //y address end1   
+ 	unsigned int i;  
+	unsigned int x_end,x_start1,x_start2,x_end1,x_end2;
+	unsigned int y_start1,y_start2,y_end1,y_end2;
+	x_start=x_start;
+	x_end=x_start+PART_LINE-1; 
+	
+	x_start1=0;
+	x_start2=x_start;
+	if(x_start>=256)
+	{
+		x_start1=x_start2/256;
+		x_start2=x_start2%256;
+	}	
+	x_end1=0;
+	x_end2=x_end;
+	if(x_end2>=256)
+	{
+		x_end1=x_end2/256;
+		x_end2=x_end2%256;		
+	}		
 
-  EPD_W21_WriteCMD(0x4E);   // set RAM x address count to 0;
-  EPD_W21_WriteDATA(x_start);   //x start address
-  EPD_W21_WriteCMD(0x4F);   // set RAM y address count to 0X127;    
-  EPD_W21_WriteDATA(y_start%256); //y address start2
-  EPD_W21_WriteDATA(y_start/256); //y address start1
-    
-  EPD_W21_WriteCMD(0x24);   //Write Black and White image to RAM
-  for(i=0;i<PART_COLUMN*PART_LINE/8;i++)
-   {                         
-     EPD_W21_WriteDATA(datas[i]);
-   } 
+	y_start1=0;
+	y_start2=y_start;
+	if(y_start>=256)
+	{
+		y_start1=y_start2/256;
+		y_start2=y_start2%256;
+	}
+	y_end1=0;
+	y_end2=y_start+PART_COLUMN-1;
+	if(y_end2>=256)
+	{
+		y_end1=y_end2/256;
+		y_end2=y_end2%256;		
+	}		
+//Reset
+	EPD_W21_RST_0;  // Module reset   
+	delay_xms(10);//At least 10ms delay 
+	EPD_W21_RST_1;
+	delay_xms(10); //At least 10ms delay 
+	
+	EPD_W21_WriteCMD(0x3C); //BorderWavefrom  
+	EPD_W21_WriteDATA(0x80);	
+//	
+	EPD_W21_WriteCMD(0x44);       // set RAM x address start/end, in page 35
+	EPD_W21_WriteDATA(x_start2);    // RAM y address start at 0127h;
+	EPD_W21_WriteDATA(x_start1);    // RAM y address start at 0127h;
+	EPD_W21_WriteDATA(x_end2);    // RAM y address end at 00h;
+	EPD_W21_WriteDATA(x_end1);    // ????=0	
+	EPD_W21_WriteCMD(0x45);       // set RAM y address start/end, in page 35
+	EPD_W21_WriteDATA(y_start2);    // RAM y address start at 0127h;
+	EPD_W21_WriteDATA(y_start1);    // RAM y address start at 0127h;
+	EPD_W21_WriteDATA(y_end2);    // RAM y address end at 00h;
+	EPD_W21_WriteDATA(y_end1);    // ????=0	
+
+
+	EPD_W21_WriteCMD(0x4E);   // set RAM x address count to 0;
+	EPD_W21_WriteDATA(x_start2);
+	EPD_W21_WriteDATA(x_start1);
+	EPD_W21_WriteCMD(0x4F);   // set RAM y address count to 0X127;    
+	EPD_W21_WriteDATA(y_start2);
+	EPD_W21_WriteDATA(y_start1);
+	
+	EPD_W21_WriteCMD(0x24);   //Write Black and White image to RAM
+	 for(i=0;i<PART_COLUMN*PART_LINE/8;i++)
+	 {                         
+		 EPD_W21_WriteDATA(datas[i]);
+	 } 
 }
 //Clock display
 void EPD_Dis_Part_Time(unsigned int x_startA,unsigned int y_startA,const unsigned char * datasA,
